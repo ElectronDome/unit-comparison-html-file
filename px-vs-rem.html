@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSS Unit Comparison Playground</title>
+    <style>
+      :root {
+        --root-font-size: 16px;
+        font-size: var(--root-font-size);
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.4;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      .controls {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: #f3f5f9;
+        border-radius: 0.5rem;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .controls label {
+        font-weight: 600;
+      }
+      .font-display {
+        display: inline-block;
+        min-width: 2ch;
+        text-align: center;
+        font-weight: bold;
+        background: #fff;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .controls button {
+        font-size: 1rem;
+        padding: 0.4rem 0.75rem;
+        margin: 0;
+        cursor: pointer;
+        border: 1px solid #0072ff;
+        background: #0072ff;
+        color: white;
+        border-radius: 4px;
+        transition: background 0.2s;
+      }
+      .controls button:hover {
+        background: #005fcc;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .unit-card {
+        border: 1px solid #d0d7e2;
+        border-radius: 0.5rem;
+        padding: 1rem;
+      }
+
+      .unit-card h2 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.25rem;
+      }
+
+      .box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .box--px {
+        width: 200px;
+        height: 60px;
+        background: #0e7fe1;
+      }
+      .box--rem {
+        width: 12rem;
+        height: 4rem;
+        background: #5c2d91;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <label>Root font-size:</label>
+      <button id="decreaseFont">−</button>
+      <span class="font-display" id="fontValue">16</span>px
+      <button id="increaseFont">+</button>
+    </div>
+
+    <section class="demo-grid">
+      <article class="unit-card">
+        <h2>px (pixels)</h2>
+        <div class="box box--px">200px&nbsp;×&nbsp;60px</div>
+        <p>
+          <strong>px</strong> is a fixed-size unit. It does not scale with
+          screen size, zoom level, or user settings. Useful for pixel-perfect
+          elements like icons, borders, or images where you want precise
+          control.
+        </p>
+        <p>
+          Use the control buttons above to change the root font size — this
+          box(200px&nbsp;×&nbsp;60px) won’t change at all.
+        </p>
+      </article>
+      <article class="unit-card">
+        <h2>rem (root-em)</h2>
+        <div class="box box--rem">12rem × 4rem</div>
+        <p>
+          <strong>rem</strong> is relative to the root element’s font size
+          (usually 16px). When you change the root font size, rem-based values
+          scale automatically. Great for responsive layouts and accessibility.
+        </p>
+        <p>
+          Use the control buttons above to change the root font size — this
+          box(12rem × 4rem) will grow or shrink accordingly.
+        </p>
+      </article>
+    </section>
+
+    <script>
+      const fontValue = document.getElementById("fontValue");
+      const decrease = document.getElementById("decreaseFont");
+      const increase = document.getElementById("increaseFont");
+
+      function updateFontSize(val) {
+        document.documentElement.style.setProperty(
+          "--root-font-size",
+          `${val}px`
+        );
+        fontValue.textContent = val;
+      }
+
+      decrease.addEventListener("click", () => {
+        let current = parseInt(fontValue.textContent);
+        if (current > 10) updateFontSize(current - 1);
+      });
+
+      increase.addEventListener("click", () => {
+        let current = parseInt(fontValue.textContent);
+        if (current < 24) updateFontSize(current + 1);
+      });
+    </script>
+  </body>
+</html>
