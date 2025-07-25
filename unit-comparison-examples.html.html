@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSS Unit Comparison Playground</title>
+  <style>
+    /*—Global styles—*/
+    :root {
+      /* This value is controlled by the slider below. */
+      --root-font-size: 16px;
+      font-size: var(--root-font-size);
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.4;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .controls {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: #f3f5f9;
+      border-radius: .5rem;
+    }
+    .controls label {
+      font-weight: 600;
+    }
+
+    /*—Demo layout—*/
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .unit-card {
+      border: 1px solid #d0d7e2;
+      border-radius: .5rem;
+      padding: 1rem;
+    }
+
+    .unit-card h2 {
+      margin: 0 0 .5rem 0;
+      font-size: 1.25rem;
+    }
+
+    .box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border-radius: .25rem;
+      font-size: .875rem;
+      margin-bottom: .75rem;
+    }
+
+    /* Individual boxes */
+    .box--px       { width: 200px; height: 60px; background: #0e7fe1; }
+    .box--rem      { width: 12rem;  height: 4rem;  background: #5c2d91; }
+    .box--em-parent{ font-size: 1.5rem; }
+    .box--em       { width: 12em;  height: 4em;  background: #ea4c89; }
+    .box--percent-wrapper { width: 80%; border: 2px dashed #999; margin-bottom: .5rem; }
+    .box--percent  { width: 50%; height: 3rem; background: #00a76f; }
+    .box--vw       { width: 20vw; height: 10vh; background: #ff7043; }
+    .box--vh       { width: 10vw; height: 20vh; background: #d32f2f; }
+    .box--ch       { width: 30ch; height: 3rem; background: #546e7a; }
+
+    /* Grid (fr) demo */
+    .fr-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: .5rem;
+    }
+    .fr-grid div {
+      background: #2e7d32;
+      color: #fff;
+      padding: .75rem;
+      text-align: center;
+    }
+
+    /* Utility */
+    code { background: #f8f9fb; padding: .1rem .25rem; border-radius: .25rem; }
+  </style>
+</head>
+<body>
+  <h1>CSS Units Comparison Playground</h1>
+
+  <div class="controls">
+    <label for="fontRange">Root font‑size: <span id="fontValue">16</span>px</label>
+    <input id="fontRange" type="range" min="10" max="24" value="16" step="1" />
+  </div>
+
+  <section class="demo-grid">
+    <!-- px -->
+    <article class="unit-card">
+      <h2>px (pixels)</h2>
+      <div class="box box--px">200&nbsp;×&nbsp;60px</div>
+      <p>Fixed size, never scales with text or viewport.</p>
+    </article>
+
+    <!-- rem -->
+    <article class="unit-card">
+      <h2>rem (root‑em)</h2>
+      <div class="box box--rem">12rem × 4rem</div>
+      <p>Grows when <code>:root</code> font‑size changes (try the slider).</p>
+    </article>
+
+    <!-- em -->
+    <article class="unit-card box--em-parent">
+      <h2>em (element‑em)</h2>
+      <div class="box box--em">12em × 4em</div>
+      <p>Relative to *this* element’s font‑size (1.5rem).</p>
+    </article>
+
+    <!-- percent -->
+    <article class="unit-card">
+      <h2>% (percentage)</h2>
+      <div class="box--percent-wrapper">
+        <div class="box box--percent">50% width of wrapper</div>
+      </div>
+      <p>Relative to parent’s size—in this case <code>80%</code> of body width.</p>
+    </article>
+
+    <!-- vw & vh -->
+    <article class="unit-card">
+      <h2>vw / vh (viewport)</h2>
+      <div class="box box--vw">20vw × 10vh</div>
+      <div class="box box--vh">10vw × 20vh</div>
+      <p>Resize the window to see these boxes adapt.</p>
+    </article>
+
+    <!-- ch -->
+    <article class="unit-card">
+      <h2>ch (character)</h2>
+      <div class="box box--ch">30ch wide</div>
+      <p>Width of the <em>“0”</em> character in current font. Good for text line length.</p>
+    </article>
+
+    <!-- fr -->
+    <article class="unit-card">
+      <h2>fr (fraction)</h2>
+      <div class="fr-grid">
+        <div>1fr</div><div>2fr</div><div>1fr</div>
+      </div>
+      <p>Inside <code>grid</code>, available space is split into fractions.</p>
+    </article>
+  </section>
+
+  <script>
+    const slider = document.getElementById('fontRange');
+    const value  = document.getElementById('fontValue');
+    slider.addEventListener('input', e => {
+      const px = e.target.value;
+      document.documentElement.style.setProperty('--root-font-size', `${px}px`);
+      value.textContent = px;
+    });
+  </script>
+
+  <!--
+    📝 How to experiment ---------------------------------------------
+    1. Move the "Root font-size" slider (or use browser zoom) — watch
+       rem & em boxes grow while pixel boxes stay fixed.
+    2. Resize the browser window — observe vw & vh boxes, plus the
+       80% wrapper, adapting to viewport changes.
+    3. Toggle device toolbar in DevTools to test on phones/tablets.
+    4. In DevTools > Elements, set body font-family to monospace and
+       see the ch‑based box adjust to the new character width.
+    5. Inspect the fr‑grid: change grid-template-columns to 3fr 1fr 2fr
+       in DevTools, and see columns redistribute instantly.
+  -->
+</body>
+</html>
